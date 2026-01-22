@@ -44,3 +44,39 @@ jobs:
       # 7. Push Docker image to Docker Hub / registry
       - name: Push Docker image
         run: docker push hacked01/shopkart-app:${{ github.sha }}
+
+
+  update-k8s:
+    name: Update Kubernetes Deployment
+    runs-on: ubuntu-latest
+    needs: [ build-and-push ]
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+      
+      - name: Setup Git config
+        run: |
+          git config user.name "GitHub Actions"
+          git config user.email "actions@github.com"
+      
+      - name: Update Kubernetes deployment file
+        env:
+           IMAGE_TAG: ${{ github.sha }}
+           DOCKER_REPO: hacked01/app12
+        run: |
+     
+         NEW_IMAGE="${DOCKER_REPO}:${IMAGE_TAG}"
+         sed -i "s|image: .*|image: ${NEW_IMAGE}|g" k8s/ds.yml
+         echo "Updated deployment to use image: ${NEW_IMAGE}"
+         grep -A 1 "image:" k8s/ds.yml
+
+      
+      - name: Commit and push changes
+        run: |
+          git add k8s/ds.yml
+          git commit -m "Update Kubernetes deployment with new image tag: ${{ needs.docker.outputs.image_tag }} [skip ci]" || echo "No changes to commit"
+          git pull --rebase origin main || echo "Nothing to pull"
+          git push
