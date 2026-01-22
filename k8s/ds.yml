@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: shopkart-container
-          image: your-dockerhub-username/shopkart-app:latest
+          image: hacked01/shopkart-app:${{ github.sha }}
           ports:
             - containerPort: 8080
           env:
@@ -41,3 +41,4 @@ spec:
     - protocol: TCP
       port: 80         # external port
       targetPort: 8080 # container port
+
