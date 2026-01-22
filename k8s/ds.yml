@@ -34,13 +34,14 @@ kind: Service
 metadata:
   name: shopkart-service
 spec:
-  type: LoadBalancer   # Change to NodePort if using Minikube
+  type: Nodeport   # Change to NodePort if using Minikube
   selector:
     app: shopkart
   ports:
     - protocol: TCP
       port: 80         # external port
       targetPort: 8080 # container port
+
 
 
 
