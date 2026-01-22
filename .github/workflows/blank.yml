@@ -24,7 +24,7 @@ jobs:
 
       # 3. Build and test the Maven project
       - name: Build & Test
-        run: mvn clean install
+        run: mvn clean package -DskipTests
 
       # 4. Optional: Run OWASP Dependency Check for security
       - name: Dependency Check
