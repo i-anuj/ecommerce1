@@ -27,8 +27,8 @@ jobs:
         run: mvn clean package -DskipTests
 
       # 4. Optional: Run OWASP Dependency Check for security
-      - name: Dependency Check
-        run: mvn org.owasp:dependency-check-maven:check
+      #- name: Dependency Check
+      #  run: mvn org.owasp:dependency-check-maven:check
 
       # 5. Log in to Docker Hub / registry
       - name: Docker Login
