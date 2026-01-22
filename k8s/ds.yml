@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: shopkart-container
-          image: hacked01/app12:e522a7200378ab90209c11e4dcbf76e3a7303d87
+          image: hacked01/shopkart-app:e522a7200378ab90209c11e4dcbf76e3a7303d87
           ports:
             - containerPort: 8080
           env:
@@ -41,5 +41,6 @@ spec:
     - protocol: TCP
       port: 80         # external port
       targetPort: 8080 # container port
+
 
 
