@@ -1,4 +1,4 @@
-FROM openjdk:21-jdk-oracle
+FROM openjdk:21-jdk-bullseye
 
 WORKDIR /app
 
