@@ -20,6 +20,8 @@ spec:
           ports:
             - containerPort: 8080
           env:
+            - name: PROJECT_PATH
+              value: "/app/uploads"
             - name: SPRING_DATASOURCE_URL
               value: jdbc:mysql://mysql-service:3306/shopkartdb
             - name: SPRING_DATASOURCE_USERNAME
@@ -41,6 +43,7 @@ spec:
     - protocol: TCP
       port: 80         # external port
       targetPort: 8080 # container port
+
 
 
 
