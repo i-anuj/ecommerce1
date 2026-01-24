@@ -49,8 +49,7 @@
 		      <% for (Product product : productList) { %>
 			      <div class="grid-element">
 			        <a href="/product/<%= product.getId() %>">
-			          <img
-			            src="${pageContext.request.contextPath}/uploads/product/<%= product.getImage() %>"
+			          <img src="${pageContext.request.contextPath}<%= product.getImage() %>"
 			            alt=<%= product.getImage() %>
 			          />
 			        </a>
