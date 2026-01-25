@@ -2,11 +2,11 @@ name: cicd
 
 on:
   push:
-    branches: [main]    # Trigger only on main branch
-  workflow_dispatch:    # Allows manual trigger
+    branches: [main]    
+  workflow_dispatch:   
 
 jobs:
-  build-and-push:
+  build:
     runs-on: ubuntu-latest
 
     steps:
@@ -25,31 +25,63 @@ jobs:
       # 3. Build and test the Maven project
       - name: Build & Test
         run: mvn clean package -DskipTests
-
-      # 4. Optional: Run OWASP Dependency Check for security
-      #- name: Dependency Check
-      #  run: mvn org.owasp:dependency-check-maven:check
-
-      # 5. Log in to Docker Hub / registry
-      - name: Docker Login
-        uses: docker/login-action@v2
+        
+      - name: Upload a Build Artifact
+        uses: actions/upload-artifact@v5.0.0
         with:
-          username: ${{ secrets.DOCKER_USERNAME }}
-          password: ${{ secrets.DOCKER_PASSWORD }}
+          name: shopkart-app
+          path: target/*.jar
+    
+  Test:
+    runs-on: ubuntu-latest
+    needs: build
+  
+    steps:
+    - uses: actions/checkout@v4
+    - name: Trivy Installation
+      run: |
+        sudo apt-get install -y wget apt-transport-https gnupg lsb-release
+        wget -qO - https://aquasecurity.github.io/trivy-repo/deb/public.key | sudo apt-key add -
+        echo deb https://aquasecurity.github.io/trivy-repo/deb $(lsb_release -sc) main | sudo tee -a /etc/apt/sources.list.d/trivy.list
+        sudo apt-get update -y
+        sudo apt-get install -y trivy
 
-      # 6. Build Docker image
-      - name: Build Docker image
-        run: docker build -t hacked01/shopkart-app:${{ github.sha }} .
+    - name: Trivy FS Scan
+      run: trivy fs --exit-code 0 --severity HIGH,CRITICAL --format table -o fs-report.json .
 
-      # 7. Push Docker image to Docker Hub / registry
-      - name: Push Docker image
-        run: docker push hacked01/shopkart-app:${{ github.sha }}
+    - name: Upload Trivy FS scan report
+      uses: actions/upload-artifact@v4
+      with:
+        name: trivy-fs-report
+        path: fs-report.json
+    - name: Gitleaks Installation
+      run: sudo apt install gitleaks -y
+    - name: Gitleaks Code Scan
+      run: gitleaks detect --source . --report-path=gitleaks-report.json -f json
+      
+  pushtoDocker:
+   runs-on: ubuntu-latest
+   needs: Test
 
+   steps:
+   - uses: actions/checkout@v4
+   - name: Set up JDK 17
+     uses: actions/setup-java@v4
+     with:
+      java-version: '17'
+      distribution: 'temurin'
+      cache: maven
+   
+   - name: Download artifact
+     uses: actions/download-artifact@v5.0.0
+     with: 
+       name: shopkart-app
+       path: ./app
 
   update-k8s:
     name: Update Kubernetes Deployment
     runs-on: ubuntu-latest
-    needs: [ build-and-push ]
+    needs: [ pushtoDocker ]
     if: github.ref == 'refs/heads/main' && github.event_name == 'push'
     steps:
       - name: Checkout code
