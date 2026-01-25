@@ -1,14 +1,8 @@
 # ShopKart : E-commerce Website
 
 ## About 💬
-This is a simple e-commerce website implemented using the `Spring Boot` framework in Java, by a group of five members, namely `Spring Spartans`. This group project is assigned under `Information Processing for Web` in 5th semester of BTech (IT), `University of Calcutta`
-
+This is a simple e-commerce website implemented using the `Spring Boot` framework in Java.
 Link to the website - (https://ecommerce1-ubsp.onrender.com)
-## Version History 🚩
-![Version](https://img.shields.io/badge/Version%20no.-v2.0-blue)  ![Type](https://img.shields.io/badge/Version%20type-Stable-005f00)  ![Commit No.](https://img.shields.io/badge/Released%20on-Commit%20no.%20128-orange) 
-
-![Version](https://img.shields.io/badge/Version%20no.-v1.0-blue)  ![Type](https://img.shields.io/badge/Version%20type-Beta-ffc107)  ![Commit No.](https://img.shields.io/badge/Released%20on-Commit%20no.%2075-orange) 
-
 
 ## Tech Stack 👨‍💻
 ![Java](https://img.shields.io/badge/java-%23ED8B00.svg?style=flat&logo=openjdk&logoColor=white)
@@ -44,8 +38,7 @@ Link to the website - (https://ecommerce1-ubsp.onrender.com)
 | `/cartitem/cart`                      | Customer's cart                    |
 | `/order/history`                      | Customer's order history/list      |
 | `/order/summary/{id}`                 | Summary of order placed            |
-| `/admin`                              | Login page for Admin               |
-| `/admin/dashboard`                    | Admin Dashboard                    |
+                  |
 ---
 
 ## Prerequisites 🛠️
@@ -96,6 +89,4 @@ To clone the repository, follow these steps:
 ---
 
 
-     http://localhost:8080
-     ```
      
