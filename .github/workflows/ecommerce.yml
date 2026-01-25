@@ -80,6 +80,24 @@ jobs:
        name: shopkart-app
        path: ./app
 
+   - name: Docker login
+     uses: docker/login-action@v3.6.0
+     with:
+       username: ${{secrets.DOCKER_USERNAME}}
+       password: ${{secrets.DOCKER_PASSWORD}}
+   - name: build and psuh
+     run: docker build -t hacked01/shopkart-app:${{ github.sha }} .
+
+   - name: docker list
+     run: docker images
+
+   - name: push
+     run: docker push hacked01/shopkart-app:${{ github.sha }}
+   - name: docker run
+     run: docker run -d -p 8080:8080 hacked01/shopkart-app:${{ github.sha}}
+   - name: docker ls
+     run: docker ps -a
+
   update-k8s:
     name: Update Kubernetes Deployment
     runs-on: ubuntu-latest
